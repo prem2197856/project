@@ -202,19 +202,28 @@
 
 
     // Handle language toggle
-    languageToggle.addEventListener('click', () => {
-      if (language === 'en') {
-        language = 'th';
-        languageFlag.textContent = '🇹🇭'; // Thai Flag emoji
-        languageText.textContent = 'ไทย'; // Change text to Thai
-        introText.textContent = 'ป้อนปัญหาของคุณด้านล่างและรับคำตอบอย่างรวดเร็ว'; // Change intro text to Thai
-      } else {
-        language = 'en';
-        languageFlag.textContent = '🇬🇧'; // UK Flag emoji
-        languageText.textContent = 'English'; // Change text to English
-        introText.textContent = 'Enter your problem below and get a quick solution.'; // Change intro text to English
-      }
-    });
+   // Trigger solution with 'Enter' key
+document.getElementById('inputText').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    document.getElementById('getSolutionBtn').click();
+  }
+});
+
+// Handle language toggle
+languageToggle.addEventListener('click', () => {
+  if (language === 'en') {
+    language = 'th';
+    languageFlag.textContent = '🇹🇭'; // Thai Flag emoji
+    languageText.textContent = 'ไทย'; // Change text to Thai
+    introText.textContent = 'ป้อนปัญหาของคุณด้านล่างและรับคำตอบอย่างรวดเร็ว'; // Change intro text to Thai
+  } else {
+    language = 'en';
+    languageFlag.textContent = '🇬🇧'; // UK Flag emoji
+    languageText.textContent = 'English'; // Change text to English
+    introText.textContent = 'Enter your problem below and get a quick solution.'; // Change intro text to English
+  }
+});
+
 
     // Get solution button click event
     document.getElementById('getSolutionBtn').addEventListener('click', getSolution);
