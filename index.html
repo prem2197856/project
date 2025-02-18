@@ -142,7 +142,7 @@
     const introText = document.getElementById('introText');
     
     let language = 'en';
-    const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiOGJmY2U4ZWQtZjUwNy00OGUyLWE3YWUtZmYxZGUyZmMyNDQ4IiwidHlwZSI6ImZyb250X2FwaV90b2tlbiJ9.f-xL1wFQNsZTivlYEn4Cg_CJEbORCDI7hqEkFtZhGdA";
+    const apiKey = "def0cef371bd4441830802c619a953b9";
     
     // Toggle theme
     themeToggle.addEventListener('change', () => {
@@ -158,40 +158,48 @@
     });
 
     // Handle the button click for solution
-    async function getSolution() {
-      const inputText = document.getElementById('inputText').value;
-      if (!inputText) {
-        document.getElementById('solution').innerText = "Please enter a problem!";
-        return;
-      }
-      try {
-        const response = await fetch("https://api.edenai.run/v2/text/generation", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${apiKey}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            providers: ["openai"],
-            text: inputText,
-            temperature: 0.7,
-            max_tokens: 150,
-          }),
-        });
-        const data = await response.json();
-        const solution = data.openai?.generated_text || "No solution found.";
-        document.getElementById('solution').innerText = solution;
-      } catch (error) {
-        document.getElementById('solution').innerText = "Error fetching solution.";
-      }
-    }
+   async function getSolution() {
+  const inputText = document.getElementById('inputText').value;
+  if (!inputText) {
+    document.getElementById('solution').innerText = "Please enter a problem!";
+    return;
+  }
 
-    // Trigger solution with 'Enter' key
-    document.getElementById('inputText').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        getSolution();
-      }
+  try {
+    const response = await fetch("https://api.aimlapi.com/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "gemini-1.5-flash",  // Replace this with a real model name from checkModels()
+        messages: [
+          { role: "system", content: "You are an AI assistant providing solutions." },
+          { role: "user", content: inputText }
+        ],
+        temperature: 0.7,
+        max_tokens: 150
+      }),
     });
+
+    const data = await response.json();
+    
+    // Debugging - log full API response in console
+    console.log("API Response:", data);
+
+    // Extract and display solution
+    if (data.choices && data.choices.length > 0) {
+      document.getElementById('solution').innerText = data.choices[0].message.content;
+    } else {
+      document.getElementById('solution').innerText = "No solution found.";
+    }
+  } catch (error) {
+    console.error("API Error:", error);
+    document.getElementById('solution').innerText = "Error fetching solution. Check the console for details.";
+  }
+}
+
 
     // Handle language toggle
     languageToggle.addEventListener('click', () => {
